@@ -1,0 +1,23 @@
+This script takes one argument, which is the network to scan in CIDR notation (e.g., 192.168.0.0/24). If no argument is provided, the script displays a usage message and exits with an error code.
+
+The script then uses nmap with the -sn option to perform a ping scan on the specified network. The output of nmap is piped to awk, which extracts the IP addresses of the hosts that are up and prints them one per line.
+
+Note that nmap may not be installed by default on your system, so you may need to install it before running this script. Also, scanning a network without permission is illegal and could result in serious consequences. Make sure you have the necessary authorization before scanning a network.
+
+
+
+
+
+==============
+#!/bin/bash
+
+if [ $# -eq 0 ]; then
+  echo "Usage: $0 <network>"
+  echo "Example: $0 192.168.0.0/24"
+  exit 1
+fi
+
+network=$1
+echo "Scanning network $network..."
+nmap -sn $network | awk '/is up/ {print up}; {gsub (/\(|\)/,""); up = $NF}'
+=============
